@@ -413,7 +413,7 @@ const LeadTable = ({
                             {lead.account_company_name || '-'}
                           </button> : column.field === 'contact_owner' ? <span className="truncate block">
                             {lead.created_by ? displayNames[lead.created_by] || "Loading..." : '-'}
-                          </span> : column.field === 'lead_status' && lead.lead_status ? <Badge variant={lead.lead_status === 'New' ? 'secondary' : lead.lead_status === 'Contacted' ? 'default' : lead.lead_status === 'Converted' ? 'outline' : 'outline'} className="whitespace-nowrap">
+                          </span> : column.field === 'lead_status' && lead.lead_status ? <Badge variant={lead.lead_status === 'New' ? 'secondary' : lead.lead_status === 'Attempted' ? 'default' : lead.lead_status === 'Follow-up' ? 'default' : lead.lead_status === 'Qualified' ? 'outline' : lead.lead_status === 'Disqualified' ? 'destructive' : 'outline'} className="whitespace-nowrap">
                             {lead.lead_status}
                           </Badge> : <span className="truncate block" title={lead[column.field as keyof Lead]?.toString() || '-'}>
                             {lead[column.field as keyof Lead] || '-'}

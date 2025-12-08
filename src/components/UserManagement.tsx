@@ -23,8 +23,15 @@ import {
   Link2,
   UserCog,
   Trash2,
-  ArrowUpDown
+  ArrowUpDown,
+  MoreHorizontal
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 import {
   Tooltip,
@@ -537,63 +544,31 @@ const UserManagement = () => {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-center gap-1">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-8 w-8"
-                                onClick={() => handleEditUser(user)}
-                              >
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="h-8 w-8">
                                 <Edit className="h-4 w-4" />
                               </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Edit User</TooltipContent>
-                          </Tooltip>
-                          
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-8 w-8"
-                                onClick={() => handleToggleUserStatus(user)}
-                              >
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              {user.banned_until ? 'Activate' : 'Deactivate'}
-                            </TooltipContent>
-                          </Tooltip>
-                          
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-8 w-8"
-                                onClick={() => handleSetPassword(user)}
-                              >
-                                <Link2 className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Set Password</TooltipContent>
-                          </Tooltip>
-                          
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-8 w-8"
-                                onClick={() => handleChangeRole(user)}
-                              >
-                                <UserCog className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Change Role</TooltipContent>
-                          </Tooltip>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => handleEditUser(user)}>
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit User
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleToggleUserStatus(user)}>
+                                <Eye className="h-4 w-4 mr-2" />
+                                {user.banned_until ? 'Activate' : 'Deactivate'}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleSetPassword(user)}>
+                                <Link2 className="h-4 w-4 mr-2" />
+                                Set Password
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleChangeRole(user)}>
+                                <UserCog className="h-4 w-4 mr-2" />
+                                Change Role
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                           
                           <Tooltip>
                             <TooltipTrigger asChild>

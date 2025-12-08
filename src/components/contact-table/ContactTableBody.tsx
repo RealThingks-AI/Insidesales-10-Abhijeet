@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Edit, Trash2, ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, UserPlus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useUserDisplayNames } from "@/hooks/useUserDisplayNames";
 import { ContactColumnConfig } from "../ContactColumnCustomizer";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,6 +15,7 @@ interface Contact {
   contact_name: string;
   company_name?: string;
   account_company_name?: string;
+  account_id?: string;
   position?: string;
   email?: string;
   phone_no?: string;
@@ -55,6 +57,7 @@ export const ContactTableBody = ({
   onSort
 }: ContactTableBodyProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   // Get all unique user IDs that we need to fetch display names for
   const contactOwnerIds = [...new Set(pageContacts.map(c => c.contact_owner).filter(Boolean))];
@@ -266,6 +269,20 @@ export const ContactTableBody = ({
                         className="text-primary hover:underline font-medium text-left"
                       >
                         {contact[column.field as keyof Contact]}
+                      </button>
+                    ) : column.field === 'account_company_name' && contact.account_company_name ? (
+                      <button
+                        onClick={() => {
+                          if (contact.account_id) {
+                            navigate(`/accounts?highlight=${contact.account_id}`);
+                          } else {
+                            navigate('/accounts');
+                          }
+                        }}
+                        className="text-primary hover:underline font-medium text-left truncate max-w-[200px]"
+                        title={contact.account_company_name}
+                      >
+                        {contact.account_company_name}
                       </button>
                     ) : (
                       <span className="truncate max-w-[200px]" title={String(getDisplayValue(contact, column.field))}>

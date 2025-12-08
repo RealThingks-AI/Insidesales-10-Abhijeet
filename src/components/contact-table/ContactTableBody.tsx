@@ -13,20 +13,15 @@ interface Contact {
   id: string;
   contact_name: string;
   company_name?: string;
+  account_company_name?: string;
   position?: string;
   email?: string;
   phone_no?: string;
-  region?: string;
   contact_owner?: string;
-  lead_status?: string;
+  contact_source?: string;
   created_by?: string;
   linkedin?: string;
   website?: string;
-  contact_source?: string;
-  industry?: string;
-  description?: string;
-  mobile_no?: string;
-  city?: string;
   [key: string]: any;
 }
 

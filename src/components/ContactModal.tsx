@@ -141,9 +141,13 @@ export const ContactModal = ({ open, onOpenChange, contact, onSuccess }: Contact
         return;
       }
 
+      // Get company_name from selected account
+      const selectedAccount = accounts.find(acc => acc.id === data.account_id);
+      
       const contactData = {
         contact_name: data.contact_name,
         account_id: data.account_id || null,
+        company_name: selectedAccount?.company_name || null,
         position: data.position || null,
         email: data.email || null,
         phone_no: data.phone_no || null,

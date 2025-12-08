@@ -3,13 +3,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Edit, Trash2, ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, UserPlus } from "lucide-react";
+import { Edit, Trash2, ArrowUpDown, ArrowUp, ArrowDown, UserPlus } from "lucide-react";
 import { useUserDisplayNames } from "@/hooks/useUserDisplayNames";
 import { ContactColumnConfig } from "../ContactColumnCustomizer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { AccountViewModal } from "../AccountViewModal";
+import { ConvertToLeadConfirmDialog } from "./ConvertToLeadConfirmDialog";
 
 interface Contact {
   id: string;
@@ -60,6 +60,9 @@ export const ContactTableBody = ({
   const { toast } = useToast();
   const [viewAccountId, setViewAccountId] = useState<string | null>(null);
   const [accountViewOpen, setAccountViewOpen] = useState(false);
+  const [convertDialogOpen, setConvertDialogOpen] = useState(false);
+  const [contactToConvert, setContactToConvert] = useState<Contact | null>(null);
+  const [isConverting, setIsConverting] = useState(false);
   
   // Get all unique user IDs that we need to fetch display names for
   const contactOwnerIds = [...new Set(pageContacts.map(c => c.contact_owner).filter(Boolean))];
@@ -88,9 +91,28 @@ export const ContactTableBody = ({
     }
   };
 
-  const handleConvertToLead = async (contact: Contact) => {
+  const handleOpenConvertDialog = (contact: Contact) => {
+    setContactToConvert(contact);
+    setConvertDialogOpen(true);
+  };
+
+  const handleConvertToLead = async (formData: {
+    lead_name: string;
+    company_name: string;
+    position: string;
+    email: string;
+    phone_no: string;
+    linkedin: string;
+    website: string;
+    contact_source: string;
+    lead_status: string;
+    industry: string;
+    country: string;
+    description: string;
+  }) => {
     try {
-      console.log('Converting contact to lead:', contact);
+      setIsConverting(true);
+      console.log('Converting contact to lead with data:', formData);
       
       // Get current user
       const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -99,28 +121,27 @@ export const ContactTableBody = ({
         throw new Error('User not authenticated');
       }
 
-      // Create a new lead with contact information
-      // Only include fields that have values to avoid insertion errors
+      // Create a new lead with form data
       const leadData: any = {
-        lead_name: contact.contact_name,
+        lead_name: formData.lead_name,
         created_by: user.id,
         created_time: new Date().toISOString(),
         modified_time: new Date().toISOString()
       };
 
       // Add optional fields only if they have values
-      if (contact.company_name) leadData.company_name = contact.company_name;
-      if (contact.position) leadData.position = contact.position;
-      if (contact.email) leadData.email = contact.email;
-      if (contact.phone_no) leadData.phone_no = contact.phone_no;
-      if (contact.linkedin) leadData.linkedin = contact.linkedin;
-      if (contact.website) leadData.website = contact.website;
-      if (contact.contact_source) leadData.contact_source = contact.contact_source;
-      if (contact.lead_status) leadData.lead_status = contact.lead_status;
-      if (contact.industry) leadData.industry = contact.industry;
-      if (contact.region) leadData.country = contact.region; // Map region to country for leads table
-      if (contact.description) leadData.description = contact.description;
-      if (contact.contact_owner) leadData.contact_owner = contact.contact_owner;
+      if (formData.company_name) leadData.company_name = formData.company_name;
+      if (formData.position) leadData.position = formData.position;
+      if (formData.email) leadData.email = formData.email;
+      if (formData.phone_no) leadData.phone_no = formData.phone_no;
+      if (formData.linkedin) leadData.linkedin = formData.linkedin;
+      if (formData.website) leadData.website = formData.website;
+      if (formData.contact_source) leadData.contact_source = formData.contact_source;
+      if (formData.lead_status) leadData.lead_status = formData.lead_status;
+      if (formData.industry) leadData.industry = formData.industry;
+      if (formData.country) leadData.country = formData.country;
+      if (formData.description) leadData.description = formData.description;
+      if (contactToConvert?.contact_owner) leadData.contact_owner = contactToConvert.contact_owner;
 
       console.log('Lead data to insert:', leadData);
 
@@ -139,8 +160,11 @@ export const ContactTableBody = ({
 
       toast({
         title: "Success",
-        description: `Contact "${contact.contact_name}" has been converted to a lead successfully.`,
+        description: `Contact "${formData.lead_name}" has been converted to a lead successfully.`,
       });
+
+      setConvertDialogOpen(false);
+      setContactToConvert(null);
 
       if (onRefresh) {
         onRefresh();
@@ -152,6 +176,8 @@ export const ContactTableBody = ({
         description: error instanceof Error ? error.message : "Failed to convert contact to lead. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsConverting(false);
     }
   };
 
@@ -307,7 +333,7 @@ export const ContactTableBody = ({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleConvertToLead(contact)}
+                    onClick={() => handleOpenConvertDialog(contact)}
                     className="h-8 w-8 p-0 hover:bg-muted"
                     title="Convert to lead"
                   >
@@ -334,6 +360,15 @@ export const ContactTableBody = ({
         open={accountViewOpen}
         onOpenChange={setAccountViewOpen}
         accountId={viewAccountId}
+      />
+
+      {/* Convert to Lead Confirmation Dialog */}
+      <ConvertToLeadConfirmDialog
+        open={convertDialogOpen}
+        onOpenChange={setConvertDialogOpen}
+        contact={contactToConvert}
+        onConfirm={handleConvertToLead}
+        isLoading={isConverting}
       />
     </div>
   );

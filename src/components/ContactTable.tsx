@@ -14,6 +14,8 @@ interface Contact {
   id: string;
   contact_name: string;
   company_name?: string;
+  account_id?: string;
+  account_company_name?: string;
   position?: string;
   email?: string;
   phone_no?: string;

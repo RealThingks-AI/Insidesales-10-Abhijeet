@@ -407,8 +407,15 @@ const LeadTable = ({
                 }} className="text-primary hover:underline font-medium text-left truncate block w-full">
                             {lead[column.field as keyof Lead] || '-'}
                           </button> : column.field === 'account_company_name' ? <button 
-                            onClick={() => navigate('/accounts')} 
+                            onClick={() => {
+                              if (lead.account_id) {
+                                navigate(`/accounts?highlight=${lead.account_id}`);
+                              } else {
+                                navigate('/accounts');
+                              }
+                            }} 
                             className="text-primary hover:underline font-medium text-left truncate block w-full"
+                            title={lead.account_company_name || undefined}
                           >
                             {lead.account_company_name || '-'}
                           </button> : column.field === 'contact_owner' ? <span className="truncate block">

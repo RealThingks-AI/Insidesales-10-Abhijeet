@@ -44,13 +44,15 @@ const Accounts = () => {
       fileInputRef.current.value = '';
     }
   };
-  return <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-bold text-foreground mb-2 text-2xl">Accounts</h1>
-        </div>
-        <div className="flex items-center gap-2">
+  return <div className="h-screen flex flex-col bg-background overflow-hidden">
+      {/* Fixed Header */}
+      <div className="flex-shrink-0 bg-background">
+        <div className="px-6 h-16 flex items-center border-b w-full">
+          <div className="flex items-center justify-between w-full">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-2xl font-bold text-foreground">Accounts</h1>
+            </div>
+            <div className="flex items-center gap-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -113,6 +115,8 @@ const Accounts = () => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -121,17 +125,18 @@ const Accounts = () => {
       display: 'none'
     }} />
 
-      {/* Account Table */}
-      <AccountTable showColumnCustomizer={showColumnCustomizer} setShowColumnCustomizer={setShowColumnCustomizer} showModal={showModal} setShowModal={setShowModal} selectedAccounts={selectedAccounts} setSelectedAccounts={setSelectedAccounts} key={refreshTrigger} onBulkDeleteComplete={() => {
-      setSelectedAccounts([]);
-      setRefreshTrigger(prev => prev + 1);
-      setShowBulkDeleteDialog(false);
-    }} />
+      {/* Main Content Area */}
+      <div className="flex-1 min-h-0 overflow-auto p-6">
+        <AccountTable showColumnCustomizer={showColumnCustomizer} setShowColumnCustomizer={setShowColumnCustomizer} showModal={showModal} setShowModal={setShowModal} selectedAccounts={selectedAccounts} setSelectedAccounts={setSelectedAccounts} key={refreshTrigger} onBulkDeleteComplete={() => {
+        setSelectedAccounts([]);
+        setRefreshTrigger(prev => prev + 1);
+        setShowBulkDeleteDialog(false);
+      }} />
+      </div>
 
       {/* Bulk Delete Confirmation Dialog */}
       <AccountDeleteConfirmDialog open={showBulkDeleteDialog} onConfirm={async () => {
       setIsDeleting(true);
-      // Deletion will be handled by AccountTable
       setShowBulkDeleteDialog(false);
       setIsDeleting(false);
     }} onCancel={() => setShowBulkDeleteDialog(false)} isMultiple={true} count={selectedAccounts.length} />

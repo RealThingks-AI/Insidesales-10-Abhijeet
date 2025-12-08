@@ -58,13 +58,15 @@ const Leads = () => {
       fileInputRef.current.value = '';
     }
   };
-  return <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-bold text-foreground mb-2 text-2xl">Leads</h1>
-        </div>
-        <div className="flex items-center gap-2">
+  return <div className="h-screen flex flex-col bg-background overflow-hidden">
+      {/* Fixed Header */}
+      <div className="flex-shrink-0 bg-background">
+        <div className="px-6 h-16 flex items-center border-b w-full">
+          <div className="flex items-center justify-between w-full">
+            <div className="min-w-0 flex-1">
+              <h1 className="text-2xl font-bold text-foreground">Leads</h1>
+            </div>
+            <div className="flex items-center gap-2">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -127,6 +129,8 @@ const Leads = () => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -135,8 +139,10 @@ const Leads = () => {
       display: 'none'
     }} />
 
-      {/* Lead Table */}
-      <LeadTable showColumnCustomizer={showColumnCustomizer} setShowColumnCustomizer={setShowColumnCustomizer} showModal={showModal} setShowModal={setShowModal} selectedLeads={selectedLeads} setSelectedLeads={setSelectedLeads} key={refreshTrigger} />
+      {/* Main Content Area */}
+      <div className="flex-1 min-h-0 overflow-auto p-6">
+        <LeadTable showColumnCustomizer={showColumnCustomizer} setShowColumnCustomizer={setShowColumnCustomizer} showModal={showModal} setShowModal={setShowModal} selectedLeads={selectedLeads} setSelectedLeads={setSelectedLeads} key={refreshTrigger} />
+      </div>
 
       {/* Bulk Delete Confirmation Dialog */}
       <LeadDeleteConfirmDialog open={showBulkDeleteDialog} onConfirm={handleBulkDelete} onCancel={() => setShowBulkDeleteDialog(false)} isMultiple={true} count={selectedLeads.length} />

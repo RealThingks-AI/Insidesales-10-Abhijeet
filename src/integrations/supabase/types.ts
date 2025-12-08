@@ -71,6 +71,48 @@ export type Database = {
         }
         Relationships: []
       }
+      backups: {
+        Row: {
+          backup_type: string
+          created_at: string
+          created_by: string | null
+          file_name: string
+          file_path: string
+          id: string
+          manifest: Json | null
+          records_count: number | null
+          size_bytes: number | null
+          status: string
+          tables_count: number | null
+        }
+        Insert: {
+          backup_type?: string
+          created_at?: string
+          created_by?: string | null
+          file_name: string
+          file_path: string
+          id?: string
+          manifest?: Json | null
+          records_count?: number | null
+          size_bytes?: number | null
+          status?: string
+          tables_count?: number | null
+        }
+        Update: {
+          backup_type?: string
+          created_at?: string
+          created_by?: string | null
+          file_name?: string
+          file_path?: string
+          id?: string
+          manifest?: Json | null
+          records_count?: number | null
+          size_bytes?: number | null
+          status?: string
+          tables_count?: number | null
+        }
+        Relationships: []
+      }
       contacts: {
         Row: {
           account_id: string | null
@@ -524,6 +566,42 @@ export type Database = {
           status?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      page_permissions: {
+        Row: {
+          admin_access: boolean
+          created_at: string
+          description: string | null
+          id: string
+          manager_access: boolean
+          page_name: string
+          route: string
+          updated_at: string
+          user_access: boolean
+        }
+        Insert: {
+          admin_access?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          manager_access?: boolean
+          page_name: string
+          route: string
+          updated_at?: string
+          user_access?: boolean
+        }
+        Update: {
+          admin_access?: boolean
+          created_at?: string
+          description?: string | null
+          id?: string
+          manager_access?: boolean
+          page_name?: string
+          route?: string
+          updated_at?: string
+          user_access?: boolean
         }
         Relationships: []
       }

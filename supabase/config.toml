@@ -14,3 +14,9 @@ verify_jwt = false
 
 [functions.security-monitor]
 verify_jwt = false
+
+[functions.create-backup]
+verify_jwt = false
+
+[functions.restore-backup]
+verify_jwt = false

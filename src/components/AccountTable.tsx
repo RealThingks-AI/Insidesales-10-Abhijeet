@@ -36,14 +36,14 @@ export interface Account {
 
 const defaultColumns: AccountColumnConfig[] = [
   { field: 'company_name', label: 'Company Name', visible: true, order: 0 },
-  { field: 'country', label: 'Country', visible: true, order: 1 },
+  { field: 'company_type', label: 'Company Type', visible: true, order: 1 },
   { field: 'industry', label: 'Industry', visible: true, order: 2 },
-  { field: 'status', label: 'Status', visible: true, order: 3 },
-  { field: 'tags', label: 'Tags', visible: true, order: 4 },
-  { field: 'website', label: 'Website', visible: true, order: 5 },
-  { field: 'account_owner', label: 'Account Owner', visible: true, order: 6 },
-  { field: 'region', label: 'Region', visible: false, order: 7 },
-  { field: 'company_type', label: 'Company Type', visible: false, order: 8 },
+  { field: 'tags', label: 'Tags', visible: true, order: 3 },
+  { field: 'country', label: 'Country', visible: true, order: 4 },
+  { field: 'status', label: 'Status', visible: true, order: 5 },
+  { field: 'website', label: 'Website', visible: true, order: 6 },
+  { field: 'account_owner', label: 'Account Owner', visible: true, order: 7 },
+  { field: 'region', label: 'Region', visible: false, order: 8 },
   { field: 'phone', label: 'Phone', visible: false, order: 9 },
 ];
 

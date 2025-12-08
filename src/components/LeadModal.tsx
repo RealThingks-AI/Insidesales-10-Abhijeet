@@ -66,8 +66,10 @@ const leadSources = [
 
 const leadStatuses = [
   "New",
-  "Contacted",
-  "Converted"
+  "Attempted",
+  "Follow-up",
+  "Qualified",
+  "Disqualified"
 ];
 
 export const LeadModal = ({ open, onOpenChange, lead, onSuccess }: LeadModalProps) => {

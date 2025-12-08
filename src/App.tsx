@@ -106,7 +106,8 @@ const AppRouter = () => (
           <Auth />
         </AuthRoute>
       } />
-      <Route path="/" element={
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/dashboard" element={
         <ProtectedRoute>
           <Dashboard />
         </ProtectedRoute>

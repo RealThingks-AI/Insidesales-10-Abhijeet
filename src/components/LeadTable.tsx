@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useCRUDAudit } from "@/hooks/useCRUDAudit";
 import { useUserDisplayNames } from "@/hooks/useUserDisplayNames";
+import { useUserRole } from "@/hooks/useUserRole";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -104,6 +105,7 @@ const LeadTable = ({
   const {
     logDelete
   } = useCRUDAudit();
+  const { userRole } = useUserRole();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -441,12 +443,16 @@ const LeadTable = ({
                   }} title="Delete lead" className="h-8 w-8 p-0">
                           <Trash2 className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={() => handleConvertToDeal(lead)} disabled={lead.lead_status === 'Converted'} title="Convert to deal" className="h-8 w-8 p-0">
-                          <RefreshCw className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={() => handleActionItems(lead)} title="Action items" className="h-8 w-8 p-0">
-                          <ListTodo className="w-4 h-4" />
-                        </Button>
+                        {userRole !== 'user' && (
+                          <Button variant="ghost" size="sm" onClick={() => handleConvertToDeal(lead)} disabled={lead.lead_status === 'Converted'} title="Convert to deal" className="h-8 w-8 p-0">
+                            <RefreshCw className="w-4 h-4" />
+                          </Button>
+                        )}
+                        {userRole !== 'user' && (
+                          <Button variant="ghost" size="sm" onClick={() => handleActionItems(lead)} title="Action items" className="h-8 w-8 p-0">
+                            <ListTodo className="w-4 h-4" />
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>)}

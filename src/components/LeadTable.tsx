@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useCRUDAudit } from "@/hooks/useCRUDAudit";
@@ -17,6 +16,7 @@ import { LeadStatusFilter } from "./LeadStatusFilter";
 import { ConvertToDealModal } from "./ConvertToDealModal";
 import { LeadActionItemsModal } from "./LeadActionItemsModal";
 import { LeadDeleteConfirmDialog } from "./LeadDeleteConfirmDialog";
+import { AccountViewModal } from "./AccountViewModal";
 
 interface Lead {
   id: string;
@@ -98,7 +98,6 @@ const LeadTable = ({
   selectedLeads,
   setSelectedLeads
 }: LeadTableProps) => {
-  const navigate = useNavigate();
   const {
     toast
   } = useToast();
@@ -122,6 +121,8 @@ const LeadTable = ({
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [showActionItemsModal, setShowActionItemsModal] = useState(false);
   const [selectedLeadForActions, setSelectedLeadForActions] = useState<Lead | null>(null);
+  const [viewAccountId, setViewAccountId] = useState<string | null>(null);
+  const [accountViewOpen, setAccountViewOpen] = useState(false);
 
   useEffect(() => {
     fetchLeads();
@@ -409,9 +410,8 @@ const LeadTable = ({
                           </button> : column.field === 'account_company_name' ? <button 
                             onClick={() => {
                               if (lead.account_id) {
-                                navigate(`/accounts?highlight=${lead.account_id}`);
-                              } else {
-                                navigate('/accounts');
+                                setViewAccountId(lead.account_id);
+                                setAccountViewOpen(true);
                               }
                             }} 
                             className="text-primary hover:underline font-medium text-left truncate block w-full"
@@ -491,6 +491,12 @@ const LeadTable = ({
       setShowDeleteDialog(false);
       setLeadToDelete(null);
     }} leadName={leadToDelete?.lead_name} />
+
+      <AccountViewModal 
+        open={accountViewOpen} 
+        onOpenChange={setAccountViewOpen} 
+        accountId={viewAccountId} 
+      />
     </div>;
 };
 

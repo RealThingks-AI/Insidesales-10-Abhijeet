@@ -82,7 +82,11 @@ export const useAccountsImportExport = (onImportComplete: () => void) => {
           tags = tagList.filter((t: string) => validTags.includes(t));
         }
 
+        // Check if record has an ID for update
+        const existingId = record.id || null;
+
         records.push({
+          id: existingId,
           company_name: companyName,
           region: record.region || null,
           country: record.country || null,
@@ -93,8 +97,8 @@ export const useAccountsImportExport = (onImportComplete: () => void) => {
           notes: record.notes || null,
           industry: record.industry || null,
           phone: record.phone || null,
-          created_by: user.id,
-          account_owner: user.id,
+          created_by: record.created_by || user.id,
+          account_owner: record.account_owner || user.id,
           modified_by: user.id,
         });
       }
@@ -103,11 +107,33 @@ export const useAccountsImportExport = (onImportComplete: () => void) => {
         throw new Error('No valid records found in CSV');
       }
 
-      // Upsert by company_name
+      // Upsert by id or company_name
       let successCount = 0;
       let updateCount = 0;
 
       for (const record of records) {
+        const { id, ...recordWithoutId } = record;
+
+        // If id is provided, try to update by id first
+        if (id) {
+          const { data: existingById } = await supabase
+            .from('accounts')
+            .select('id')
+            .eq('id', id)
+            .maybeSingle();
+
+          if (existingById) {
+            const { error } = await supabase
+              .from('accounts')
+              .update({ ...recordWithoutId, updated_at: new Date().toISOString() })
+              .eq('id', id);
+            
+            if (!error) updateCount++;
+            continue;
+          }
+        }
+
+        // Otherwise, check by company_name
         const { data: existing } = await supabase
           .from('accounts')
           .select('id')
@@ -117,14 +143,14 @@ export const useAccountsImportExport = (onImportComplete: () => void) => {
         if (existing) {
           const { error } = await supabase
             .from('accounts')
-            .update({ ...record, updated_at: new Date().toISOString() })
+            .update({ ...recordWithoutId, updated_at: new Date().toISOString() })
             .eq('id', existing.id);
           
           if (!error) updateCount++;
         } else {
           const { error } = await supabase
             .from('accounts')
-            .insert(record);
+            .insert(recordWithoutId);
           
           if (!error) successCount++;
         }
@@ -165,8 +191,9 @@ export const useAccountsImportExport = (onImportComplete: () => void) => {
       }
 
       const headers = [
-        'company_name', 'region', 'country', 'website', 'company_type',
-        'tags', 'status', 'notes', 'industry', 'phone'
+        'id', 'company_name', 'company_type', 'industry', 'tags', 'country', 
+        'status', 'website', 'region', 'notes', 'phone',
+        'account_owner', 'created_by', 'modified_by', 'created_at', 'updated_at'
       ];
 
       const csvLines = [headers.join(',')];

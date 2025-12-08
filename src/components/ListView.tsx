@@ -376,7 +376,17 @@ export const ListView = ({
   return (
     <div className="h-full flex flex-col bg-background">
       <div className="flex-shrink-0 p-4 bg-background border-b">
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="flex items-center justify-end mb-4">
+          <DealActionsDropdown
+            deals={deals}
+            onImport={onImportDeals}
+            onRefresh={() => {}}
+            selectedDeals={selectedDealObjects}
+            onColumnCustomize={() => setColumnCustomizerOpen(true)}
+            showColumns={true}
+          />
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
           <div className="flex flex-col sm:flex-row gap-4 flex-1">
             <div className="relative w-full sm:w-80">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -409,17 +419,6 @@ export const ListView = ({
                 Clear All
               </Button>
             )}
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <DealActionsDropdown
-              deals={deals}
-              onImport={onImportDeals}
-              onRefresh={() => {}}
-              selectedDeals={selectedDealObjects}
-              onColumnCustomize={() => setColumnCustomizerOpen(true)}
-              showColumns={true}
-            />
           </div>
         </div>
       </div>

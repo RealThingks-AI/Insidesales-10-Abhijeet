@@ -1,6 +1,7 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { usePageAccess } from '@/hooks/usePageAccess';
 import { ShieldAlert } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 interface PageAccessGuardProps {
   children: React.ReactNode;
@@ -8,9 +9,11 @@ interface PageAccessGuardProps {
 
 const PageAccessGuard = ({ children }: PageAccessGuardProps) => {
   const location = useLocation();
+  const { user, loading: authLoading } = useAuth();
   const { hasAccess, loading } = usePageAccess(location.pathname);
 
-  if (loading) {
+  // Wait for both auth and access check to complete
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -21,7 +24,14 @@ const PageAccessGuard = ({ children }: PageAccessGuardProps) => {
     );
   }
 
+  // If user is not authenticated, redirect to auth
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  // If access is explicitly denied (hasAccess is false, not null)
   if (hasAccess === false) {
+    console.log('PageAccessGuard - Access denied for route:', location.pathname);
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center max-w-md p-8">

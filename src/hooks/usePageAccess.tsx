@@ -14,9 +14,14 @@ interface PagePermission {
 export const usePageAccess = (route: string) => {
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   const checkAccess = useCallback(async () => {
+    // Wait for auth to finish loading
+    if (authLoading) {
+      return;
+    }
+
     if (!user) {
       setHasAccess(false);
       setLoading(false);
@@ -24,26 +29,30 @@ export const usePageAccess = (route: string) => {
     }
 
     try {
+      // Normalize route - handle "/" as "/dashboard" and remove trailing slashes
+      const normalizedRoute = route === '/' ? '/dashboard' : route.replace(/\/$/, '');
+      console.log('usePageAccess - Checking access for normalized route:', normalizedRoute);
+
       // Get user role from user_roles table (more reliable than metadata)
       const { data: roleData, error: roleError } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
-      // Fallback to metadata if no role in table
+      // Fallback to metadata if no role in table, then default to 'user'
       const userRole = roleData?.role || user.user_metadata?.role || 'user';
-      console.log('usePageAccess - User role:', userRole, 'for route:', route);
+      console.log('usePageAccess - User ID:', user.id, 'Role:', userRole, 'for route:', normalizedRoute);
 
       // Get page permission for this route
       const { data: permissionData, error: permissionError } = await supabase
         .from('page_permissions')
         .select('*')
-        .eq('route', route)
-        .single();
+        .eq('route', normalizedRoute)
+        .maybeSingle();
 
-      if (permissionError) {
-        console.log('No permission found for route:', route, '- allowing access by default');
+      if (permissionError || !permissionData) {
+        console.log('No permission found for route:', normalizedRoute, '- allowing access by default');
         // If no permission record exists, allow access
         setHasAccess(true);
         setLoading(false);
@@ -65,7 +74,14 @@ export const usePageAccess = (route: string) => {
           break;
       }
 
-      console.log('usePageAccess - Permission check:', { route, userRole, canAccess, permissionData });
+      console.log('usePageAccess - Permission check result:', { 
+        route: normalizedRoute, 
+        userRole, 
+        canAccess, 
+        admin_access: permissionData.admin_access,
+        manager_access: permissionData.manager_access,
+        user_access: permissionData.user_access
+      });
       setHasAccess(canAccess);
     } catch (error) {
       console.error('Error checking page access:', error);
@@ -74,7 +90,7 @@ export const usePageAccess = (route: string) => {
     } finally {
       setLoading(false);
     }
-  }, [user, route]);
+  }, [user, route, authLoading]);
 
   useEffect(() => {
     checkAccess();

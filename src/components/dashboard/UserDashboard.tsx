@@ -6,11 +6,26 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Users, FileText, Briefcase, TrendingUp, Clock, CheckCircle2, ArrowRight, Plus } from "lucide-react";
+
+const useUserProfile = (userId: string | undefined) => {
+  return useQuery({
+    queryKey: ['user-profile', userId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', userId)
+        .maybeSingle();
+      if (error) throw error;
+      return data?.full_name || null;
+    },
+    enabled: !!userId
+  });
+};
 const UserDashboard = () => {
-  const {
-    user
-  } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const { data: userName } = useUserProfile(user?.id);
 
   // Fetch user's leads count
   const {
@@ -127,8 +142,9 @@ const UserDashboard = () => {
       {/* Welcome Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Welcome back!</h1>
-          
+          <h1 className="text-2xl font-bold text-foreground">
+            Welcome back{userName ? `, ${userName}` : ''}!
+          </h1>
         </div>
       </div>
 

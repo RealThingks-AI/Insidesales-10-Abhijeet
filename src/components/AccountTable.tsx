@@ -38,10 +38,10 @@ const defaultColumns: AccountColumnConfig[] = [
   { field: 'company_name', label: 'Company Name', visible: true, order: 0 },
   { field: 'country', label: 'Country', visible: true, order: 1 },
   { field: 'industry', label: 'Industry', visible: true, order: 2 },
-  { field: 'account_owner', label: 'Account Owner', visible: true, order: 3 },
-  { field: 'status', label: 'Status', visible: true, order: 4 },
-  { field: 'tags', label: 'Tags', visible: true, order: 5 },
-  { field: 'website', label: 'Website', visible: true, order: 6 },
+  { field: 'status', label: 'Status', visible: true, order: 3 },
+  { field: 'tags', label: 'Tags', visible: true, order: 4 },
+  { field: 'website', label: 'Website', visible: true, order: 5 },
+  { field: 'account_owner', label: 'Account Owner', visible: true, order: 6 },
   { field: 'region', label: 'Region', visible: false, order: 7 },
   { field: 'company_type', label: 'Company Type', visible: false, order: 8 },
   { field: 'phone', label: 'Phone', visible: false, order: 9 },
@@ -360,7 +360,9 @@ const AccountTable = ({
                           rel="noopener noreferrer"
                           className="text-primary hover:underline flex items-center gap-1"
                         >
-                          <span className="truncate max-w-[150px]">{account.website}</span>
+                          <span className="truncate max-w-[150px]">
+                            {account.website.replace(/^https?:\/\//, '')}
+                          </span>
                           <ExternalLink className="w-3 h-3" />
                         </a>
                       ) : (

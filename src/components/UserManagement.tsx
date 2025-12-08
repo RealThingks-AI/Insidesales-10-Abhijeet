@@ -268,7 +268,7 @@ const UserManagement = () => {
   const getRoleLabel = useCallback((role: string) => {
     switch (role?.toLowerCase()) {
       case 'admin':
-        return 'Administrator';
+        return 'Admin';
       case 'manager':
         return 'Management';
       default:

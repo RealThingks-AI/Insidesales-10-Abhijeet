@@ -11,7 +11,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus, LayoutGrid, List, PanelLeft } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
-import { useSidebar, SidebarTrigger } from "@/components/ui/sidebar";
 import { useCRUDAudit } from "@/hooks/useCRUDAudit";
 import { DealsSettingsDropdown } from "@/components/DealsSettingsDropdown";
 
@@ -347,7 +346,9 @@ const DealsPage = () => {
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
               <Separator orientation="vertical" className="h-6" />
-              <SidebarTrigger />
+              <Button variant="ghost" size="icon" className="h-7 w-7">
+                <PanelLeft className="h-4 w-4" />
+              </Button>
               <Separator orientation="vertical" className="h-6" />
               <h1 className="text-2xl lg:text-3xl font-bold text-foreground">Deals</h1>
             </div>

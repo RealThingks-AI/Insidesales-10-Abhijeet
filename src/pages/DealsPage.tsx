@@ -347,7 +347,7 @@ const DealsPage = () => {
               <h1 className="text-2xl lg:text-3xl font-bold text-foreground">Deals</h1>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-shrink-0">
-              <div className="bg-muted rounded-lg p-1 flex">
+              <div className="bg-muted rounded-lg p-1 flex items-center gap-1">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -380,10 +380,7 @@ const DealsPage = () => {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-              </div>
-
-              {/* Actions icon-only button between view toggle and Add Deal */}
-              <DealActionsDropdown
+                <DealActionsDropdown
                 deals={deals}
                 onImport={handleImportDeals}
                 onRefresh={fetchDeals}
@@ -394,6 +391,7 @@ const DealsPage = () => {
                   window.dispatchEvent(new CustomEvent('open-deal-columns'));
                 }}
               />
+              </div>
 
               <TooltipProvider>
                 <Tooltip>

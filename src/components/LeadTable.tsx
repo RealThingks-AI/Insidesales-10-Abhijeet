@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useCRUDAudit } from "@/hooks/useCRUDAudit";
@@ -45,7 +46,7 @@ const defaultColumns: LeadColumnConfig[] = [{
   order: 0
 }, {
   field: 'account_company_name',
-  label: 'Company Account',
+  label: 'Company Name',
   visible: true,
   order: 1
 }, {
@@ -97,6 +98,7 @@ const LeadTable = ({
   selectedLeads,
   setSelectedLeads
 }: LeadTableProps) => {
+  const navigate = useNavigate();
   const {
     toast
   } = useToast();
@@ -404,6 +406,11 @@ const LeadTable = ({
                   setShowModal(true);
                 }} className="text-primary hover:underline font-medium text-left truncate block w-full">
                             {lead[column.field as keyof Lead] || '-'}
+                          </button> : column.field === 'account_company_name' ? <button 
+                            onClick={() => navigate('/accounts')} 
+                            className="text-primary hover:underline font-medium text-left truncate block w-full"
+                          >
+                            {lead.account_company_name || '-'}
                           </button> : column.field === 'contact_owner' ? <span className="truncate block">
                             {lead.created_by ? displayNames[lead.created_by] || "Loading..." : '-'}
                           </span> : column.field === 'lead_status' && lead.lead_status ? <Badge variant={lead.lead_status === 'New' ? 'secondary' : lead.lead_status === 'Contacted' ? 'default' : lead.lead_status === 'Converted' ? 'outline' : 'outline'} className="whitespace-nowrap">

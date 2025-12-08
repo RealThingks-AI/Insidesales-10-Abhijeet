@@ -1,14 +1,15 @@
+import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Edit, Trash2, ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, UserPlus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useUserDisplayNames } from "@/hooks/useUserDisplayNames";
 import { ContactColumnConfig } from "../ContactColumnCustomizer";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { AccountViewModal } from "../AccountViewModal";
 
 interface Contact {
   id: string;
@@ -57,7 +58,8 @@ export const ContactTableBody = ({
   onSort
 }: ContactTableBodyProps) => {
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const [viewAccountId, setViewAccountId] = useState<string | null>(null);
+  const [accountViewOpen, setAccountViewOpen] = useState(false);
   
   // Get all unique user IDs that we need to fetch display names for
   const contactOwnerIds = [...new Set(pageContacts.map(c => c.contact_owner).filter(Boolean))];
@@ -274,9 +276,8 @@ export const ContactTableBody = ({
                       <button
                         onClick={() => {
                           if (contact.account_id) {
-                            navigate(`/accounts?highlight=${contact.account_id}`);
-                          } else {
-                            navigate('/accounts');
+                            setViewAccountId(contact.account_id);
+                            setAccountViewOpen(true);
                           }
                         }}
                         className="text-primary hover:underline font-medium text-left truncate max-w-[200px]"
@@ -327,6 +328,13 @@ export const ContactTableBody = ({
           ))}
         </TableBody>
       </Table>
+
+      {/* Account View Modal */}
+      <AccountViewModal
+        open={accountViewOpen}
+        onOpenChange={setAccountViewOpen}
+        accountId={viewAccountId}
+      />
     </div>
   );
 };

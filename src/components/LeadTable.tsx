@@ -21,15 +21,15 @@ interface Lead {
   id: string;
   lead_name: string;
   company_name?: string;
+  account_company_name?: string;
+  account_id?: string;
   position?: string;
   email?: string;
   phone_no?: string;
-  country?: string;
   contact_owner?: string;
   created_time?: string;
   modified_time?: string;
   lead_status?: string;
-  industry?: string;
   contact_source?: string;
   linkedin?: string;
   website?: string;
@@ -44,7 +44,7 @@ const defaultColumns: LeadColumnConfig[] = [{
   visible: true,
   order: 0
 }, {
-  field: 'company_name',
+  field: 'account_company_name',
   label: 'Company Account',
   visible: true,
   order: 1
@@ -166,11 +166,23 @@ const LeadTable = ({
       const {
         data,
         error
-      } = await supabase.from('leads').select('*').order('created_time', {
+      } = await supabase.from('leads').select(`
+        *,
+        accounts:account_id (
+          company_name
+        )
+      `).order('created_time', {
         ascending: false
       });
       if (error) throw error;
-      setLeads(data || []);
+      
+      // Transform data to include account_company_name
+      const transformedData = (data || []).map(lead => ({
+        ...lead,
+        account_company_name: lead.accounts?.company_name || lead.company_name || null
+      }));
+      
+      setLeads(transformedData);
     } catch (error) {
       toast({
         title: "Error",

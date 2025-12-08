@@ -44,40 +44,35 @@ const defaultColumns: LeadColumnConfig[] = [{
   visible: true,
   order: 0
 }, {
-  field: 'account_company_name',
-  label: 'Company Account',
-  visible: true,
-  order: 1
-}, {
   field: 'position',
   label: 'Position',
   visible: true,
-  order: 2
+  order: 1
 }, {
   field: 'email',
   label: 'Email',
   visible: true,
-  order: 3
+  order: 2
 }, {
   field: 'phone_no',
   label: 'Phone',
   visible: true,
-  order: 4
+  order: 3
 }, {
   field: 'contact_owner',
   label: 'Lead Owner',
   visible: true,
-  order: 5
+  order: 4
 }, {
   field: 'lead_status',
   label: 'Lead Status',
   visible: true,
-  order: 6
+  order: 5
 }, {
   field: 'contact_source',
   label: 'Source',
   visible: true,
-  order: 7
+  order: 6
 }];
 
 interface LeadTableProps {

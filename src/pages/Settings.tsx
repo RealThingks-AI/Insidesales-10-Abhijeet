@@ -6,15 +6,12 @@ import SecuritySettings from "@/components/settings/SecuritySettings";
 import AuditLogsSettings from "@/components/settings/AuditLogsSettings";
 import PageAccessSettings from "@/components/settings/PageAccessSettings";
 import BackupRestoreSettings from "@/components/settings/BackupRestoreSettings";
-
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("user-management");
-
-  return (
-    <div className="p-6 space-y-6">
+  return <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Admin Panel</h1>
+        <h1 className="font-bold text-foreground mb-2 text-2xl">Admin Panel</h1>
         <p className="text-muted-foreground">Manage your account and application preferences</p>
       </div>
 
@@ -63,8 +60,6 @@ const Settings = () => {
           <SecuritySettings />
         </TabsContent>
       </Tabs>
-    </div>
-  );
+    </div>;
 };
-
 export default Settings;

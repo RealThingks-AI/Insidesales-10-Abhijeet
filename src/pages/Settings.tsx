@@ -12,7 +12,7 @@ const Settings = () => {
       {/* Header */}
       <div>
         <h1 className="font-bold text-foreground mb-2 text-2xl">Admin Panel</h1>
-        <p className="text-muted-foreground">Manage your account and application preferences</p>
+        
       </div>
 
       {/* Settings Tabs */}

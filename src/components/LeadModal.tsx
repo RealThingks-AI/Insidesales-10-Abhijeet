@@ -154,9 +154,10 @@ export const LeadModal = ({ open, onOpenChange, lead, onSuccess }: LeadModalProp
         return;
       }
 
-      const leadData = {
+      // Prepare base data without created_by - that's set only on creation
+      const baseLeadData = {
         lead_name: data.lead_name,
-        account_id: data.account_id || null,
+        account_id: data.account_id && data.account_id.trim() !== "" ? data.account_id : null,
         position: data.position || null,
         email: data.email || null,
         phone_no: data.phone_no || null,
@@ -164,40 +165,62 @@ export const LeadModal = ({ open, onOpenChange, lead, onSuccess }: LeadModalProp
         contact_source: data.contact_source || null,
         lead_status: data.lead_status || 'New',
         description: data.description || null,
-        created_by: user.data.user.id,
         modified_by: user.data.user.id,
-        contact_owner: user.data.user.id,
       };
 
       if (lead) {
-        const { error } = await supabase
+        console.log('Updating lead with data:', { ...baseLeadData, modified_time: new Date().toISOString() });
+        
+        const { data: updatedLead, error } = await supabase
           .from('leads')
           .update({
-            ...leadData,
+            ...baseLeadData,
             modified_time: new Date().toISOString(),
           })
           .eq('id', lead.id)
           .select()
           .single();
 
+        if (error) {
+          console.error('Error updating lead:', error);
+          throw error;
+        }
+        
+        console.log('Lead updated successfully:', updatedLead);
+
         if (error) throw error;
 
-        await logUpdate('leads', lead.id, leadData, lead);
+        await logUpdate('leads', lead.id, baseLeadData, lead);
 
         toast({
           title: "Success",
           description: "Lead updated successfully",
         });
       } else {
+        // For new leads, add created_by and contact_owner
+        const newLeadData = {
+          ...baseLeadData,
+          created_by: user.data.user.id,
+          contact_owner: user.data.user.id,
+          created_time: new Date().toISOString(),
+        };
+        
+        console.log('Creating new lead with data:', newLeadData);
+        
         const { data: newLead, error } = await supabase
           .from('leads')
-          .insert(leadData)
+          .insert(newLeadData)
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error creating lead:', error);
+          throw error;
+        }
+        
+        console.log('Lead created successfully:', newLead);
 
-        await logCreate('leads', newLead.id, leadData);
+        await logCreate('leads', newLead.id, newLeadData);
 
         toast({
           title: "Success",

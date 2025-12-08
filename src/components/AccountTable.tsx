@@ -341,14 +341,14 @@ const AccountTable = ({
                           {account.status}
                         </Badge>
                       ) : column.field === 'tags' && account.tags ? (
-                        <div className="flex gap-1 flex-wrap max-w-[200px]">
+                        <div className="flex gap-1 max-w-[200px] overflow-hidden">
                           {account.tags.slice(0, 2).map((tag, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
+                            <Badge key={idx} variant="outline" className="text-xs whitespace-nowrap">
                               {tag}
                             </Badge>
                           ))}
                           {account.tags.length > 2 && (
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="outline" className="text-xs whitespace-nowrap">
                               +{account.tags.length - 2}
                             </Badge>
                           )}

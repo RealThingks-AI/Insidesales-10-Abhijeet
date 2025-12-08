@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import SecurityEnhancedApp from "@/components/SecurityEnhancedApp";
 import { AppSidebar } from "@/components/AppSidebar";
+import PageAccessGuard from "@/components/PageAccessGuard";
 import Dashboard from "./pages/Dashboard";
 import Accounts from "./pages/Accounts";
 import Contacts from "./pages/Contacts";
@@ -45,7 +46,7 @@ const FixedSidebarLayout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Protected Route Component
+// Protected Route Component with Page Access Control
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
 
@@ -64,10 +65,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return <Navigate to="/auth" replace />;
   }
 
-  // Use FixedSidebarLayout for all protected routes
+  // Use FixedSidebarLayout for all protected routes with Page Access Guard
   return (
     <FixedSidebarLayout>
-      {children}
+      <PageAccessGuard>
+        {children}
+      </PageAccessGuard>
     </FixedSidebarLayout>
   );
 };

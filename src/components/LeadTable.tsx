@@ -105,7 +105,7 @@ const LeadTable = ({
   const {
     logDelete
   } = useCRUDAudit();
-  const { userRole, loading: roleLoading } = useUserRole();
+  const { userRole } = useUserRole();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -443,7 +443,7 @@ const LeadTable = ({
                   }} title="Delete lead" className="h-8 w-8 p-0">
                           <Trash2 className="w-4 h-4" />
                         </Button>
-                        {(userRole === 'admin' || userRole === 'manager') && (
+                        {userRole !== 'user' && (
                           <Button variant="ghost" size="sm" onClick={() => handleConvertToDeal(lead)} disabled={lead.lead_status === 'Converted'} title="Convert to deal" className="h-8 w-8 p-0">
                             <RefreshCw className="w-4 h-4" />
                           </Button>

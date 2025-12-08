@@ -8,9 +8,8 @@ import { ListView } from "@/components/ListView";
 import { DealForm } from "@/components/DealForm";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, LayoutGrid, List, PanelLeft } from "lucide-react";
+import { Plus, LayoutGrid, List } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Separator } from "@/components/ui/separator";
 import { useCRUDAudit } from "@/hooks/useCRUDAudit";
 import { DealsSettingsDropdown } from "@/components/DealsSettingsDropdown";
 
@@ -344,12 +343,7 @@ const DealsPage = () => {
       <div className="flex-shrink-0 bg-background border-b">
         <div className="px-6 py-4">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-3 min-w-0">
-              <Separator orientation="vertical" className="h-6" />
-              <Button variant="ghost" size="icon" className="h-7 w-7">
-                <PanelLeft className="h-4 w-4" />
-              </Button>
-              <Separator orientation="vertical" className="h-6" />
+            <div className="min-w-0 flex-1">
               <h1 className="text-2xl lg:text-3xl font-bold text-foreground">Deals</h1>
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 flex-shrink-0">

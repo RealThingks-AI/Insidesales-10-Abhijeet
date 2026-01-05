@@ -627,86 +627,48 @@ const AccountTable = forwardRef<AccountTableRef, AccountTableProps>(({
                             )
                           )}
                       </TableCell>)}
-                    <TableCell className="w-32 px-4 py-3">
-                      <div className="flex items-center justify-center gap-1">
-                        {/* Quick actions visible on hover */}
-                        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 w-7 p-0"
-                            onClick={() => {
+                    <TableCell className="w-20 px-4 py-3">
+                      <div className="flex items-center justify-center">
+                        <RowActionsDropdown actions={[
+                          {
+                            label: "View",
+                            icon: <Eye className="w-4 h-4" />,
+                            onClick: () => {
                               setViewingAccount(account);
                               setShowDetailModal(true);
-                            }}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-7 w-7 p-0"
-                            onClick={() => {
+                            }
+                          },
+                          {
+                            label: "Edit",
+                            icon: <Edit className="w-4 h-4" />,
+                            onClick: () => {
                               setEditingAccount(account);
                               setShowModal(true);
-                            }}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
-                          {account.email && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 w-7 p-0"
-                              onClick={() => {
-                                setEmailRecipient({
-                                  name: account.company_name,
-                                  email: account.email,
-                                  company_name: account.company_name
-                                });
-                                setEmailModalOpen(true);
-                              }}
-                            >
-                              <Mail className="h-4 w-4" />
-                            </Button>
-                          )}
-                        </div>
-                        {/* Dropdown for less common actions */}
-                        <RowActionsDropdown actions={[{
-                          label: "View",
-                          icon: <Eye className="w-4 h-4" />,
-                          onClick: () => {
-                            setViewingAccount(account);
-                            setShowDetailModal(true);
-                          }
-                        }, {
-                          label: "Edit",
-                          icon: <Edit className="w-4 h-4" />,
-                          onClick: () => {
-                            setEditingAccount(account);
-                            setShowModal(true);
-                          }
-                        }, ...(account.email ? [{
-                          label: "Send Email",
-                          icon: <Mail className="w-4 h-4" />,
-                          onClick: () => {
-                            setEmailRecipient({
-                              name: account.company_name,
-                              email: account.email,
-                              company_name: account.company_name
-                            });
-                            setEmailModalOpen(true);
-                          }
-                        }] : []), {
-                          label: "Delete",
-                          icon: <Trash2 className="w-4 h-4" />,
-                          onClick: () => {
-                            setAccountToDelete(account);
-                            setShowDeleteDialog(true);
+                            }
                           },
-                          destructive: true,
-                          separator: true
-                        }]} />
+                          ...(account.email ? [{
+                            label: "Send Email",
+                            icon: <Mail className="w-4 h-4" />,
+                            onClick: () => {
+                              setEmailRecipient({
+                                name: account.company_name,
+                                email: account.email,
+                                company_name: account.company_name
+                              });
+                              setEmailModalOpen(true);
+                            }
+                          }] : []),
+                          {
+                            label: "Delete",
+                            icon: <Trash2 className="w-4 h-4" />,
+                            onClick: () => {
+                              setAccountToDelete(account);
+                              setShowDeleteDialog(true);
+                            },
+                            destructive: true,
+                            separator: true
+                          }
+                        ]} />
                       </div>
                     </TableCell>
                   </TableRow>)}

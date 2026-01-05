@@ -800,57 +800,41 @@ export const ContactTable = forwardRef<ContactTableRef, ContactTableProps>(({
                         )}
                       </TableCell>
                     ))}
-                    <TableCell className="w-32 px-4 py-3">
-                      <div className="flex items-center justify-center gap-1">
-                        {/* Quick action icons on hover */}
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={() => handleViewContact(contact)}
-                          title="View"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={() => handleEditContact(contact)}
-                          title="Edit"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={() => {
-                            if (contact.email) {
-                              setEmailContact(contact);
-                              setEmailModalOpen(true);
-                            }
-                          }}
-                          disabled={!contact.email}
-                          title="Send Email"
-                        >
-                          <Mail className="w-4 h-4" />
-                        </Button>
+                    <TableCell className="w-20 px-4 py-3">
+                      <div className="flex items-center justify-center">
                         <RowActionsDropdown
                           actions={[
+                            {
+                              label: "View",
+                              icon: <Eye className="w-4 h-4" />,
+                              onClick: () => handleViewContact(contact)
+                            },
+                            {
+                              label: "Edit",
+                              icon: <Pencil className="w-4 h-4" />,
+                              onClick: () => handleEditContact(contact)
+                            },
+                            ...(contact.email ? [{
+                              label: "Send Email",
+                              icon: <Mail className="w-4 h-4" />,
+                              onClick: () => {
+                                setEmailContact(contact);
+                                setEmailModalOpen(true);
+                              }
+                            }] : []),
                             {
                               label: "Create Meeting",
                               icon: <CalendarPlus className="w-4 h-4" />,
                               onClick: () => {
                                 setMeetingContact(contact);
                                 setMeetingModalOpen(true);
-                              }
+                              },
+                              separator: true
                             },
                             {
                               label: "Convert to Lead",
                               icon: <UserPlus className="w-4 h-4" />,
-                              onClick: () => handleConvertToLead(contact),
-                              separator: true
+                              onClick: () => handleConvertToLead(contact)
                             },
                             {
                               label: "Delete",

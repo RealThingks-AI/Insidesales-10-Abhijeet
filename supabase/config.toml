@@ -1,9 +1,15 @@
 project_id = "narvjcteixgjclvjvlbn"
 
+[functions.send-email]
+verify_jwt = true
+
 [functions.user-admin]
 verify_jwt = false
 
 [functions.create-teams-meeting]
+verify_jwt = false
+
+[functions.cancel-teams-meeting]
 verify_jwt = false
 
 [functions.fetch-user-display-names]
@@ -19,4 +25,13 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.restore-backup]
+verify_jwt = false
+
+[functions.sync-profile-names]
+verify_jwt = false
+
+[functions.track-email-open]
+verify_jwt = false
+
+[functions.update-teams-meeting]
 verify_jwt = false

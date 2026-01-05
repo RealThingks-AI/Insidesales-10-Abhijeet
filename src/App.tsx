@@ -1,4 +1,4 @@
-
+// RT-CRM Application
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,11 +12,13 @@ import Dashboard from "./pages/Dashboard";
 import Accounts from "./pages/Accounts";
 import Contacts from "./pages/Contacts";
 import Leads from "./pages/Leads";
+import Meetings from "./pages/Meetings";
 import DealsPage from "./pages/DealsPage";
 import Settings from "./pages/Settings";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import Notifications from "./pages/Notifications";
+import Tasks from "./pages/Tasks";
 import { useState } from "react";
 
 const queryClient = new QueryClient();
@@ -98,9 +100,15 @@ const AuthRoute = ({ children }: { children: React.ReactNode }) => {
 };
 
 // App Router Component - inside the auth context
+// Lazy load test page
+import StickyHeaderTest from "./pages/StickyHeaderTest";
+
+// App Router Component - inside the auth context
 const AppRouter = () => (
   <BrowserRouter>
     <Routes>
+      {/* Public test route for sticky header verification */}
+      <Route path="/sticky-header-test" element={<StickyHeaderTest />} />
       <Route path="/auth" element={
         <AuthRoute>
           <Auth />
@@ -127,6 +135,11 @@ const AppRouter = () => (
           <Leads />
         </ProtectedRoute>
       } />
+      <Route path="/meetings" element={
+        <ProtectedRoute>
+          <Meetings />
+        </ProtectedRoute>
+      } />
       <Route path="/deals" element={
         <ProtectedRoute>
           <DealsPage />
@@ -135,6 +148,11 @@ const AppRouter = () => (
       <Route path="/notifications" element={
         <ProtectedRoute>
           <Notifications />
+        </ProtectedRoute>
+      } />
+      <Route path="/tasks" element={
+        <ProtectedRoute>
+          <Tasks />
         </ProtectedRoute>
       } />
       <Route path="/settings" element={
